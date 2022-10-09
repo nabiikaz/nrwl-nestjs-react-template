@@ -1,35 +1,71 @@
-
-
 # Lbb
 
 This project was generated using [Nx](https://nx.dev).
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+# Version Control Guide Lines :
 
-🔎 **Smart, Fast and Extensible Build System**
+##### This Repository has three major branches :
 
-## Adding capabilities to your workspace
+- develop : this branch is the branch that the features branches are going to be merged in.
+- preprod : after each sprint the develop will be merged into this branch
+- prod : after each number of sprint that constitute a deliverable product the lastest preprod will be merged here and tags will be created from this branch .
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+##### Feautre branches :
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+Each feature branch name will hold the following format LB-00X the same first sufix as the ticket name of the feature in clickup , when you complete the feature branch you go and create a PR (Pull request) and request a review in github plus send a message in slack to the team-member(s) that you requested a review from.
 
-Below are our core plugins:
+##### Feature Branch Commits Structure :
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+Knowing that this is a mono-repo project meaning it contains multiple apps in it you should specify the app name as a context for your commits , for example if your commit has a modification in the backend api app your commit should be like this :
+[API] .... commit title goes here ....
+if for example your commit containes modifications in the frontend react app then :
+[FRONTEND] .... commit title goes here ...
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+> ` you don't merge your PR unless if its an emergency or time contrained situation , and don't forget to send a reminder about your non merged PR in the last day of the week or Request an explanation for why it hasn't been merged yet.`
+
+##### We Urge you to structure your commit in the most elegant way possible by following this simple steps
+
+- Write your commits in the imperative , for example : `[API] Create user CRUD`
+- keep the lines of the commits under 72 chars
+- keep a blank line between the commit title and its description if any .
+
+If your PR has been closed without being merged and rejected through clickup , look into the detailes of the rejection make the necessary changes in your branch and create another PR with the new changes .
+
+# Environment Variables :
+
+To Run the project you need to clone the ".env.example" to ".env" file and fill the env variables as the following description of each one dictate :
+
+- **NGINX_HTTP_PORT** : hold the port number like 80 of port range like this 8000-8080 for the webserver that is going to be responsible for the serving of all the apps .
+- **APPS_HTTP_PORTS_RANGE** : hold the rang of ports for the docker containers of API and FRONTEND default 3000-4000
+- **NODE_ENV** : can be either production Or development , in your local env choose development .
+- **DOMAIN_NAME** : default in your local machine it is equal to localhost , but in production it should be the domain name of the website that we are going to link server with .
+- **POSTGRES_HOST** : the host name for the postgresql db but in our case we useby default the name of the postgresql container lbb_database_1
+- **POSTGRES_PORT** : the port of the database by default 5432
+- **POSTGRES_USER** : the username of db .
+- **POSTGRES_PASSWORD** : the password of the db's user that is defined by the env variable POSTGRES_USER .
+- **POSTGRES_DB** : hold the database name .
+- **PROJECT_NAME** : this hold the project name , we use it in the configuration of the docker containers .
+- **DOCKER_SHARED_NETWORK** : this hold the docker network name that is usefull in case we want to use this project in a server that has other docker containers in it by default leave it as lbb_network
+
+# Running Project :
+
+You just need to set the env variables in the .env like mentioned above and have the docker and docker-compose installed in your machine and simply execute the following command .
+
+`sudo sh setup.sh`
+
+if you are in windows or macOs and you this produced an error just run the command without sudo .
+
+## Development server
+
+Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+
+## Build
+
+Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+## Code scaffolding
+
+Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
 
 ## Generate an application
 
@@ -47,48 +83,6 @@ Run `nx g @nrwl/react:lib my-lib` to generate a library.
 
 Libraries are shareable across libraries and applications. They can be imported from `@lbb/mylib`.
 
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
 ## Understand your workspace
 
 Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
