@@ -1,25 +1,40 @@
-name: La Brique Blue production Tag Continuous Delivery pipeline 
-on: 
+name: La Brique Blue production Tag CI/CD pipeline
+on:
   release:
     types: [published]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest 
+  integrate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./lbb
     steps:
-    - name: Deploy to Production  Server
-      uses: appleboy/ssh-action@master
-      env:
-        USER_PASSWORD: ${{ secrets.PRODUCTION_SERVER_PASSWORD }}
-      with: 
-        host: ${{ secrets.PRODUCTION_SERVER_HOST }}
-        username: ${{ secrets.PRODUCTION_SERVER_USERNAME }}
-        key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
-        port: 22
-        script_stop: true
-        envs: USER_PASSWORD
-        script: |
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.17.1
+      - run: npm install -g yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn nx run-many --target=build --all    --prod  ;
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [integrate]
+    steps:
+      - name: Deploy to Production  Server
+        uses: appleboy/ssh-action@master
+        env:
+          USER_PASSWORD: ${{ secrets.PRODUCTION_SERVER_PASSWORD }}
+        with:
+          host: ${{ secrets.PRODUCTION_SERVER_HOST }}
+          username: ${{ secrets.PRODUCTION_SERVER_USERNAME }}
+          key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+          port: 22
+          script_stop: true
+          envs: USER_PASSWORD
+          script: |
             cd lbb
             git stash
             git fetch --tags

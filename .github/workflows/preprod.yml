@@ -1,12 +1,24 @@
-name: La Brique Blue Pre-production Continuous Delivery pipeline
+name: La Brique Blue Pre-production CI/CD pipeline
 on: 
   push:
     branches: [preprod]
   workflow_dispatch:
 
 jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+         node-version: 16.17.1
+      - run: npm install -g yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn nx run-many --target=build --all    --prod  ;
+      
   deploy:
     runs-on: ubuntu-latest 
+    needs: [integrate]
     steps:
     - name: Deploy to Pre-production  Server
       uses: appleboy/ssh-action@master
