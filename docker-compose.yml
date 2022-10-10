@@ -23,7 +23,8 @@ services:
       - '${APPS_HTTP_PORTS_RANGE}:3333'
     volumes:
       - .:/home/node/app
-      - node_modules:/home/node/node_modules
+      - node_modules:/home/node/app/node_modules
+      - dist:/home/node/app/dist
 
   frontend:
     image: frontend
@@ -36,7 +37,9 @@ services:
       - '${APPS_HTTP_PORTS_RANGE}:80'
     volumes:
       - .:/home/node/app
-      - node_modules:/home/node/node_modules
+      - node_modules:/home/node/app/node_modules
+      - dist:/home/node/app/dist
+
     restart: unless-stopped
 
   database:
@@ -54,6 +57,7 @@ services:
 volumes:
   database-data:
   node_modules:
+  dist:
 
 networks:
   default:

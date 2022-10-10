@@ -12,4 +12,4 @@ RUN rm -rf ./dist/apps/api
 RUN yarn build api --production
 
 
-CMD ["pm2-runtime" , "dist/apps/api/main.js"]
+CMD ["pm2-runtime" , "./dist/apps/api/main.js"]
