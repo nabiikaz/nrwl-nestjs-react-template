@@ -15,6 +15,7 @@ jobs:
       with: 
         host: ${{ secrets.PRE_PRODUCTION_SERVER_HOST }}
         username: ${{ secrets.PRE_PRODUCTION_SERVER_USERNAME }}
+        key: ${{ secrets.PRE_PRODUCTION_SSH_PRIVATE_KEY }}
         password: ${{ secrets.PRE_PRODUCTION_SERVER_PASSWORD }}
         port: 22
         script_stop: true
