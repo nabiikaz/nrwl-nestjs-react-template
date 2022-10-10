@@ -1,0 +1,27 @@
+name: La Brique Blue production Tag Continuous Delivery pipeline 
+on: 
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: Deploy to Production  Server
+      uses: appleboy/ssh-action@master
+      env:
+        USER_PASSWORD: ${{ secrets.PRODUCTION_SERVER_PASSWORD }}
+      with: 
+        host: ${{ secrets.PRODUCTION_SERVER_HOST }}
+        username: ${{ secrets.PRODUCTION_SERVER_USERNAME }}
+        key: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+        port: 22
+        script_stop: true
+        envs: USER_PASSWORD
+        script: |
+            cd lbb
+            git stash
+            git fetch --tags
+            git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
+            echo $USER_PASSWORD |sudo -S sh setup.sh
